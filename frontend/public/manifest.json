@@ -1,0 +1,16 @@
+
+{
+  "short_name": "Sentinel AI",
+  "name": "Sentinel AI - Threat Defense",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#050505",
+  "background_color": "#050505"
+}
