@@ -1,3 +1,4 @@
+
 /**
  * SENTINEL AI - BACKEND SERVER
  * Deploy this file to Render (Web Service) using Node.js
@@ -16,9 +17,15 @@ app.use(cors());
 app.use(express.json());
 
 // --- API KEYS ---
-// Ideally set these in Render Environment Variables
-const VT_API_KEY = process.env.VT_API_KEY || "3f839e2662f6cbd73c75f5353dca2353e38e45959543749f96576895f7172b20";
-const ABUSE_IP_KEY = process.env.ABUSE_IP_KEY || "cc1234731c53e2f3ee7198133b9dc8385cccff5db45a5bfb1f1bb07e838787d87daccf09372dac10";
+// These must be set in Render Environment Variables or a local .env file
+const VT_API_KEY = process.env.VT_API_KEY;
+const ABUSE_IP_KEY = process.env.ABUSE_IP_KEY;
+
+// Security Check
+if (!VT_API_KEY || !ABUSE_IP_KEY) {
+  console.error("⚠️  WARNING: API Keys are missing! Functionality will be limited.");
+  console.error("👉 Set VT_API_KEY and ABUSE_IP_KEY in your Render Dashboard or local .env file.");
+}
 
 // --- ROUTES ---
 
@@ -32,6 +39,7 @@ app.post('/api/scan-ip', async (req, res) => {
   const { ip } = req.body;
   
   if (!ip) return res.status(400).json({ error: 'IP address required' });
+  if (!ABUSE_IP_KEY) return res.status(500).json({ error: 'Server misconfigured: Missing AbuseIPDB Key' });
 
   try {
     const response = await axios.get('https://api.abuseipdb.com/api/v2/check', {
@@ -58,6 +66,7 @@ app.post('/api/scan-url', async (req, res) => {
   const { url } = req.body;
 
   if (!url) return res.status(400).json({ error: 'URL required' });
+  if (!VT_API_KEY) return res.status(500).json({ error: 'Server misconfigured: Missing VirusTotal Key' });
 
   try {
     // Step 1: Submit URL for scanning
